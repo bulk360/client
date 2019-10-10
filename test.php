@@ -1,9 +1,13 @@
 <?php
 
-require_once "./src/RandomQuotes.php";
 
-$rq = new \RandomQuotes\RandomQuotes();
+use bulk360\client;
+require_once "./src/client.php";
 
-echo $rq->generate();
-echo "\n";
 
+$smsClient = new client('mark@360.my', '2018360interactivehuatah!');
+$response = $smsClient->send([
+				'to'	=> '60123240066',
+				'text'	=> 'Hi from Package 1.3'
+			]);
+echo $response;
