@@ -7,6 +7,9 @@ class client {
 	protected $password;
 	protected $url = 'https://sms.360.my/gw/bulk360/v1.3';
 
+	public $refID;
+	public $status;
+
 	public function __construct($username, $password) {
 		$this->username = $username;
 		$this->password = $password;
@@ -43,4 +46,21 @@ class client {
 
 		return $sentResult;
 	}
+
+	public function handleResponse($response) {
+		if (strstr($response, 'Curl failed') {
+			$this->status = 400; 
+			return 'Error';
+		}
+
+		$responseDetails = explode(",", $response);
+		if (count($responseDetails) == 3) {
+			$this->status = $responseDetails[0];
+			$this->refID = $responseDetails[2];
+		}
+		else 
+			$this->status = $response;
+		return $responseDetails;
+	}
+
 }
