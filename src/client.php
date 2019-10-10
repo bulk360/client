@@ -17,7 +17,6 @@ class client {
 	}
 
 	public function send($message) {
-		print_r($message);
 		$opts = array(
 			"ssl"	=> array(
 		        "verify_peer"		=> 	false,
@@ -48,7 +47,7 @@ class client {
 	}
 
 	public function handleResponse($response) {
-		if (strstr($response, 'Curl failed') {
+		if (strstr($response, 'Curl failed')) {
 			$this->status = 400; 
 			return 'Error';
 		}
