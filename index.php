@@ -10,6 +10,7 @@ $response = $smsClient->send([
 				'text'	=> 'Hi from Package 1.3'
 			]);
 $responseDetails = $smsClient->handleResponse($response);
+print_r($responseDetails);
 
 $status = $smsClient->status;
 $refID = $smsClient->refID;
