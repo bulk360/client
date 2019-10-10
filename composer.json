@@ -11,7 +11,7 @@
     ],
     "autoload": {
         "psr-4": {
-            "RandomQuotes\\": "src/"
+            "bulk360\\": "src/"
         }
     },
     "require": {}
