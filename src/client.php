@@ -11,7 +11,7 @@ class client {
 	protected $password;
 	protected $gateway_url = 'https://sms.360.my/api/bulk360/v2.0';
 
-	protected $ini_path = "data/token.ini";
+	protected $ini_path = __DIR__ . "/data/token.ini";
 	protected $token_url = "https://sms.360.my/oauth/token";
 	protected $access_token;
 
@@ -22,7 +22,10 @@ class client {
 	}
 
 	public function send($sms_data) {
-		$this->prepareAccessToken();
+		$tokenResult = $this->prepareAccessToken();
+		$AtokenResult = json_decode($tokenResult, true);
+		if (isset($AtokenResult['code']) && $AtokenResult['code'] == 401) 
+			return $tokenResult;
 		$query_string = http_build_query($sms_data);
 		
 		$ch = curl_init();
@@ -66,6 +69,15 @@ class client {
 
 		// 1st time load, or token expired, request token
 		$token_data = $this->requestToken($this->username, $this->password);
+		// Array
+		// (
+		// 	[error] => invalid_client
+		// 	[error_description] => Client authentication failed
+		// 	[message] => Client authentication failed
+		// )
+		if (isset($token_data['error_description']) && $token_data['error_description'] == "Client authentication failed") {
+			return '{"code":401,"desc":"Invalid Username or password"}';
+		}
 
 		$data = [
 			"expire_time"	=> Carbon::now()->addSeconds($token_data['expires_in'])->toString(),	// token expire date time 
@@ -105,7 +117,7 @@ class client {
 
 
 		$Aresponse = json_decode($response, true);
-		// print_r($Aresponse['access_token']);
+		// print_r($Aresponse);
 		return $Aresponse;
 	}
 }
