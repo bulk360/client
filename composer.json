@@ -2,6 +2,7 @@
     "name": "bulk360/client",
     "description": "PHP Client for using bulk360's API",
     "type": "library",
+    "homepage": "https://sms.360.my",
     "license": "MIT",
     "authors": [
         {
@@ -9,10 +10,12 @@
             "email": "mark@360.my"
         }
     ],
+    "require": {
+        "nesbot/carbon": ">2.0"
+    },
     "autoload": {
         "psr-4": {
             "bulk360\\": "src/"
         }
-    },
-    "require": {}
+    }
 }
