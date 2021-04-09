@@ -60,7 +60,7 @@ class client {
 		if ($config['expire_time']) {
 			// subsequent load, check token expiry
 			$recorded_time = new Carbon($config['expire_time']);
-			if ($recorded_time->gte(Carbon::now())) {
+			if ($recorded_time->gt(Carbon::now())) {
 				// token not expire, reuse it 
 				$this->access_token = $config['access_token'];
 				return;
