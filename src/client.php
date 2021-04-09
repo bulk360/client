@@ -9,10 +9,10 @@ class client {
 
 	protected $username;
 	protected $password;
-	protected $gateway_url = 'http://localhost:81/api/bulk360/v2.0';
+	protected $gateway_url = 'https://sms.360.my/api/bulk360/v2.0';
 
 	protected $ini_path = "data/token.ini";
-	protected $token_url = "http://localhost:81/oauth/token";
+	protected $token_url = "https://sms.360.my/oauth/token";
 	protected $access_token;
 
 	public function __construct($username, $password) 

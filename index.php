@@ -4,7 +4,7 @@ require_once "./vendor/autoload.php";
 
 // Please whitelist your IP and enable API in sms.360.my before you call this 
 
-$smsClient = new client('mxkazYeJ0P', 'WnPXG7TnDzmzlXEYMSvzMkB3RwzqAbt9MKh91rPb');
+$smsClient = new client('YOUR_APP_KEY', 'YOUR_APP_SECRET');
 $response = $smsClient->send([
 				'from'	=> '68068',
 				'to'	=> '60123240066',
