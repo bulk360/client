@@ -10,6 +10,7 @@ class client {
 	protected $username;
 	protected $password;
 	protected $gateway_url = 'https://sms.360.my/api/bulk360/v2.0';
+	protected $balance_url = 'https://sms.360.my/api/balance/v2.0';
 
 	protected $ini_path = __DIR__ . "/data/token.ini";
 	protected $token_url = "https://sms.360.my/oauth/token";
@@ -27,30 +28,18 @@ class client {
 		if (isset($AtokenResult['code']) && $AtokenResult['code'] == 401) 
 			return $tokenResult;
 		$query_string = http_build_query($sms_data);
-		
-		$ch = curl_init();
-        curl_setopt_array($ch, [
-			CURLOPT_URL => $this->gateway_url,
-			CURLOPT_RETURNTRANSFER => true,
-			CURLOPT_ENCODING => "",
-			CURLOPT_MAXREDIRS => 10,
-			CURLOPT_TIMEOUT => 30,
-			CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-			CURLOPT_CUSTOMREQUEST => "POST",
-			CURLOPT_POSTFIELDS => $query_string,
-			CURLOPT_HTTPHEADER => [
-				"Authorization: Bearer " . $this->access_token,
-				"Accept: application/json"
-			],
-		]);
+		return $this->postRequest($this->gateway_url, $query_string);
+	}
 
-		$sentResult = curl_exec($ch);
-		if ($sentResult == FALSE) {
-			return '{"code":500,"desc":"Server error, please contact support@360.my... ' . curl_error($ch) . '"}';
-		}
-		curl_close($ch);
+	public function balance($country = null)
+	{
+		$tokenResult = $this->prepareAccessToken();
+		$AtokenResult = json_decode($tokenResult, true);
+		if (isset($AtokenResult['code']) && $AtokenResult['code'] == 401) 
+			return $tokenResult;
 
-		return $sentResult;
+		$query_string = $country ? http_build_query($country) : [];
+		return $this->postRequest($this->balance_url, $query_string);
 	}
 
 	public function prepareAccessToken()
@@ -119,5 +108,32 @@ class client {
 		$Aresponse = json_decode($response, true);
 		// print_r($Aresponse);
 		return $Aresponse;
+	}
+
+	private function postRequest($url, $query_string)
+	{
+		$ch = curl_init();
+		curl_setopt_array($ch, [
+			CURLOPT_URL => $url,
+			CURLOPT_RETURNTRANSFER => true,
+			CURLOPT_ENCODING => "",
+			CURLOPT_MAXREDIRS => 10,
+			CURLOPT_TIMEOUT => 30,
+			CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+			CURLOPT_CUSTOMREQUEST => "POST",
+			CURLOPT_POSTFIELDS => $query_string,
+			CURLOPT_HTTPHEADER => [
+				"Authorization: Bearer " . $this->access_token,
+				"Accept: application/json"
+			],
+		]);
+
+		$sentResult = curl_exec($ch);
+		if ($sentResult == FALSE) {
+			return '{"code":500,"desc":"Server error, please contact support@360.my... ' . curl_error($ch) . '"}';
+		}
+		curl_close($ch);
+
+		return $sentResult;
 	}
 }
