@@ -16,6 +16,10 @@ echo "\n";
 $json_response = json_decode($response);
 print_r($json_response);
 
-$arr_response = json_decode($response, true);
-print_r($arr_response);
+// Check account balance
+$balance = $smsClient->balance();
+print_r($balance);
 
+// Check sms count that can send in China
+$balance = $smsClient->balance(['country' => 861]);		
+print_r($balance);

@@ -8,3 +8,29 @@ In previous version, user credentials from our portal is required for each API t
 
 Installation\
 composer require bulk360/client
+
+
+To send sms\
+> use bulk360\client;
+> require_once "./vendor/autoload.php";
+>
+> // Please whitelist your IP and enable API in sms.360.my before you call this 
+>
+> $smsClient = new client('YOUR_APP_KEY', 'YOUR_APP_SECRET');
+> $response = $smsClient->send([
+>				'from'	=> '68068',
+>				'to'	=> '60123240066',
+>				'text'	=> 'Hi from Package 2.0'
+>			]);
+
+
+To check account balance\
+> use bulk360\client;
+> require_once "./vendor/autoload.php";
+>
+> // Please whitelist your IP and enable API in sms.360.my before you call this 
+>
+> $smsClient = new client('YOUR_APP_KEY', 'YOUR_APP_SECRET');
+> $response = $smsClient->balance([
+>				'country'	=> '65'
+>			]);
