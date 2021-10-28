@@ -9,10 +9,10 @@ class client {
 
 	protected $username;
 	protected $password;
-	// protected $gateway_url = 'https://sms.360.my/gw/bulk360/v3_0/send.php';
-	protected $gateway_url = 'http://localhost:81/gw/bulk360/v3_0/send.php';
-	// protected $balance_url = 'https://sms.360.my/api/balance/v3_0/getBalance';
-	protected $balance_url = 'http://localhost:81/api/balance/v3_0/getBalance';
+	protected $gateway_url = 'https://sms.360.my/gw/bulk360/v3_0/send.php';
+	// protected $gateway_url = 'http://localhost:81/gw/bulk360/v3_0/send.php';
+	protected $balance_url = 'https://sms.360.my/api/balance/v3_0/getBalance';
+	// protected $balance_url = 'http://localhost:81/api/balance/v3_0/getBalance';
 
 	protected $ini_path = __DIR__ . "/data/token.ini";
 	protected $token_url = "https://sms.360.my/oauth/token";
