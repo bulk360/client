@@ -9,8 +9,10 @@ class client {
 
 	protected $username;
 	protected $password;
-	protected $gateway_url = 'https://sms.360.my/api/bulk360/v2.0';
-	protected $balance_url = 'https://sms.360.my/api/balance/v2.0';
+	// protected $gateway_url = 'https://sms.360.my/gw/bulk360/v3_0/send.php';
+	protected $gateway_url = 'http://localhost:81/gw/bulk360/v3_0/send.php';
+	// protected $balance_url = 'https://sms.360.my/api/balance/v3_0/getBalance';
+	protected $balance_url = 'http://localhost:81/api/balance/v3_0/getBalance';
 
 	protected $ini_path = __DIR__ . "/data/token.ini";
 	protected $token_url = "https://sms.360.my/oauth/token";
@@ -20,9 +22,31 @@ class client {
 	{
 		$this->username = $username; 
 		$this->password = $password; 		
+		$this->gateway_url = $this->gateway_url . "?user=$this->username&pass=$this->password";
+		$this->balance_url = $this->balance_url . "?user=$this->username&pass=$this->password";
 	}
 
 	public function send($sms_data) {
+        $from = $sms_data['from'];
+        $to = $sms_data['to'];
+        $text = $sms_data['text'];
+		$this->gateway_url = $this->gateway_url . "&from=" . $from . "&to=" . $to . "&text=" . rawurlencode($text);
+		$ch = curl_init();
+		curl_setopt($ch, CURLOPT_URL, $this->gateway_url);
+		curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+		curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);
+		curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
+		curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
+		$sentResult = curl_exec($ch);
+		if ($sentResult == FALSE) {
+			return 'Curl failed for sending sms to bulk360.. '.curl_error($ch);
+		}
+		curl_close($ch);
+
+		return $sentResult;
+	}
+
+	public function send2_0($sms_data) {
 		$tokenResult = $this->prepareAccessToken();
 		$AtokenResult = json_decode($tokenResult, true);
 		if (isset($AtokenResult['code']) && $AtokenResult['code'] == 401) 
@@ -32,6 +56,24 @@ class client {
 	}
 
 	public function balance($country = null)
+	{
+		$this->balance_url = $this->balance_url . ($country ? "&country=$country" : '');
+		$ch = curl_init();
+		curl_setopt($ch, CURLOPT_URL, $this->balance_url);
+		curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+		curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);
+		curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
+		curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
+		$balanceResult = curl_exec($ch);
+		if ($balanceResult == FALSE) {
+			return 'Curl failed for request balance from bulk360.. '.curl_error($ch);
+		}
+		curl_close($ch);
+
+		return $balanceResult;
+	}
+
+	public function balance2_0($country = null)
 	{
 		$tokenResult = $this->prepareAccessToken();
 		$AtokenResult = json_decode($tokenResult, true);
